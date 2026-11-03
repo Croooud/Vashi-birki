@@ -8,19 +8,19 @@
 <meta name="description" content="Ваши бирки: ленты, наклейки, бумага тишью, стикеры, скотч и шоколад с вашим логотипом.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Prata&family=Pinyon+Script&display=swap">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          milk: 'var(--milk)', tile: 'var(--tile)', ink: 'var(--ink)', graphite: 'var(--graphite)',
-          powder: 'var(--powder)', blush: 'var(--blush)', rose: 'var(--rose)', moss: 'var(--moss)', line: 'var(--line)'
+          milk: 'var(--milk)', surface: 'var(--surface)', tile: 'var(--tile)', ink: 'var(--ink)', muted: 'var(--muted)',
+          wine: 'var(--wine)', 'wine-deep': 'var(--wine-deep)', 'wine-tint': 'var(--wine-tint)', line: 'var(--line)'
         },
         fontFamily: {
-          display: ['"Playfair Display"', 'Georgia', '"Times New Roman"', 'serif'],
-          body: ['Montserrat', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+          display: ['Prata', 'Georgia', '"Times New Roman"', 'serif'],
+          body: ['Manrope', '"Segoe UI"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
           script: ['"Pinyon Script"', '"Snell Roundhand"', 'cursive']
         }
       }
@@ -28,30 +28,40 @@
   }
 </script>
 <style>
-  /* Layout: короткая журнальная главная — одна фотография, каталог в спокойной сетке; параметры товара открываются отдельным экраном. */
+  /* Layout: короткая журнальная главная — одна фотография, каталог в спокойной сетке; параметры товара открываются отдельным экраном.
+     Палитра: молочный доминирует, бордовый — кнопки, выбранные состояния и мелкие акценты. */
   :root {
-    --milk: #F9F8F6;      /* фон */
-    --tile: #EFEAE4;      /* подложка изображений */
-    --ink: #2C2A29;       /* графит */
-    --graphite: #67615E;  /* вторичный текст */
-    --powder: #C97A7E;    /* пудровый акцент */
-    --blush: #F2E1DF;     /* светлый пудровый */
-    --rose: #9A5357;      /* пудровый для текста */
-    --moss: #56654F;      /* шалфей для подписей */
-    --line: #E4DED7;      /* линии */
+    --milk: #F7F2EA;       /* основной фон */
+    --surface: #FFFCF7;    /* светлая поверхность: поля, кнопки выбора */
+    --tile: #EEE6DB;       /* подложка изображений */
+    --ink: #342A2B;        /* основной текст */
+    --muted: #75676A;      /* вторичный текст, 4,8:1 на фоне */
+    --wine: #702D3E;       /* бордовый: кнопки, выбор, акценты */
+    --wine-deep: #54202E;  /* бордовый при наведении и нажатии */
+    --wine-tint: #F1E4E3;  /* выделение текста */
+    --line: #E5D9D6;       /* разделители */
+    --font-display: Prata, Georgia, "Times New Roman", serif;
+    --font-body: Manrope, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-script: "Pinyon Script", "Snell Roundhand", cursive;
     color-scheme: light;
   }
   html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
   [hidden] { display: none !important; }
-  body { background: var(--milk); color: var(--ink); font-family: Montserrat, "Helvetica Neue", Arial, sans-serif; font-size: 15px; line-height: 1.6; }
+  body { background: var(--milk); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; font-weight: 400; -webkit-font-smoothing: antialiased; }
   body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--milk); }
   .wrap { width: 100%; max-width: 74rem; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   @media (min-width: 640px) { .wrap { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); } }
   h1, h2, h3 { text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+  /* Prata — одно начертание: без искусственного жирного и курсива */
+  .font-display { font-family: var(--font-display); font-weight: 400; font-style: normal; font-synthesis: none; letter-spacing: -.005em; }
+  .font-script { font-family: var(--font-script); font-weight: 400; font-synthesis: none; }
+  .h-display { font-size: clamp(38px, 10.6vw, 68px); line-height: 1.08; }
+  .h-section { font-size: clamp(30px, 8.4vw, 44px); line-height: 1.12; }
   .tnum { font-variant-numeric: tabular-nums; }
-  .eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
-  *:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; border-radius: 8px; }
-  ::selection { background: var(--blush); color: var(--ink); }
+  .eyebrow { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--wine); }
+  *:focus-visible { outline: 2px solid var(--wine); outline-offset: 3px; border-radius: 8px; }
+  ::selection { background: var(--wine-tint); color: var(--ink); }
   .site-header { top: env(safe-area-inset-top, 0px); }
 
   .card-img img, .card-img svg { transition: transform .7s cubic-bezier(.2,.7,.2,1); }
@@ -59,11 +69,11 @@
 
   /* ---------- экран товара ---------- */
   .sheet { position: fixed; left: 0; right: 0; top: 0; height: 100%; z-index: 80; display: flex; align-items: stretch; justify-content: center; }
-  .sheet-backdrop { position: absolute; inset: 0; background: rgba(44,42,41,.42); animation: fadeIn .2s ease; }
+  .sheet-backdrop { position: absolute; inset: 0; background: rgba(52,42,43,.4); animation: fadeIn .2s ease; }
   .sheet-panel { position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--milk); color: var(--ink); overflow: hidden; animation: sheetIn .26s cubic-bezier(.2,.7,.2,1); }
   @media (min-width: 768px) {
     .sheet { align-items: center; padding: 24px; }
-    .sheet-panel { width: min(620px, 100%); height: auto; max-height: min(88vh, 860px); border-radius: 24px; box-shadow: 0 30px 80px -24px rgba(44,42,41,.45); }
+    .sheet-panel { width: min(620px, 100%); height: auto; max-height: min(88vh, 860px); border-radius: 24px; box-shadow: 0 24px 60px -30px rgba(52,42,43,.35); }
   }
   .sheet.is-closing .sheet-panel { animation: sheetOut .16s ease forwards; }
   .sheet.is-closing .sheet-backdrop { animation: fadeOut .16s ease forwards; }
@@ -79,11 +89,16 @@
   .dlg-foot { padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
   @media (min-width: 768px) { .dlg-foot { padding-bottom: 18px; } }
 
-  .chip { transition: background-color .18s, color .18s, border-color .18s; }
-  .chip[aria-pressed="true"] { background: var(--ink); color: var(--milk); border-color: var(--ink); }
-  .field { background: #fff; border: 1px solid var(--line); border-radius: 12px; transition: border-color .18s; }
-  .field:focus { outline: none; border-color: var(--ink); }
-  select.field { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232C2A29' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  /* кнопки выбора и поля */
+  .chip { background: var(--surface); border: 1px solid var(--line); color: var(--ink); font-weight: 500; transition: background-color .18s, color .18s, border-color .18s; }
+  .chip:hover { border-color: var(--wine); }
+  .chip[aria-pressed="true"] { background: var(--wine); color: var(--surface); border-color: var(--wine); }
+  .chip[aria-pressed="true"]:hover { background: var(--wine-deep); border-color: var(--wine-deep); }
+  .field { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); transition: border-color .18s; }
+  .field:focus { outline: none; border-color: var(--wine); box-shadow: 0 0 0 1px var(--wine); }
+  .btn-wine { background: var(--wine); color: var(--surface); font-weight: 600; transition: background-color .18s; }
+  .btn-wine:hover, .btn-wine:active { background: var(--wine-deep); }
+  select.field { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23342A2B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
   details > summary { list-style: none; cursor: pointer; }
   details > summary::-webkit-details-marker { display: none; }
   details[open] > summary .chev, .chev.is-open { transform: rotate(180deg); }
@@ -104,13 +119,13 @@
 <header id="siteHeader" class="site-header sticky z-40 border-b border-line" style="background: color-mix(in srgb, var(--milk) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
   <div class="wrap flex h-[60px] items-center justify-between gap-4">
     <a href="#top" class="flex items-baseline gap-1.5 shrink-0" aria-label="Ваши бирки, в начало страницы">
-      <span class="font-display text-[21px] font-medium tracking-[.12em] leading-none">VASHI</span>
-      <span class="font-script text-[26px] leading-none text-rose -ml-0.5">birki</span>
+      <span class="font-display text-[20px] tracking-[.14em] leading-none">VASHI</span>
+      <span class="font-script text-[26px] leading-none text-wine -ml-0.5">birki</span>
     </a>
-    <nav class="flex items-center gap-5 sm:gap-8 text-[13px] font-medium text-graphite" aria-label="Разделы">
-      <a class="hover:text-ink transition-colors" href="#catalog">Каталог</a>
-      <a class="hover:text-ink transition-colors" href="#how">Как заказать</a>
-      <a class="hover:text-ink transition-colors" href="#contacts" data-contacts-only hidden>Контакты</a>
+    <nav class="flex items-center gap-5 sm:gap-8 text-[14px] font-medium text-muted" aria-label="Разделы">
+      <a class="hover:text-wine transition-colors" href="#catalog">Каталог</a>
+      <a class="hover:text-wine transition-colors" href="#how">Как заказать</a>
+      <a class="hover:text-wine transition-colors" href="#contacts" data-contacts-only hidden>Контакты</a>
     </nav>
   </div>
 </header>
@@ -120,14 +135,14 @@
   <!-- ================= ПЕРВЫЙ ЭКРАН ================= -->
   <section class="wrap grid gap-8 pt-9 pb-16 sm:pt-14 md:grid-cols-12 md:items-center md:gap-10 lg:pb-24" aria-labelledby="heroTitle">
     <div class="md:col-span-6 lg:col-span-5 min-w-0">
-      <p class="eyebrow text-moss">Печать на упаковке</p>
-      <h1 id="heroTitle" class="mt-4 font-display text-[44px] leading-[1.02] sm:text-[60px] lg:text-[72px] font-normal tracking-[-.02em]">
-        Упаковка, которую <em class="italic text-rose">узнают</em>
+      <p class="eyebrow">Печать на упаковке</p>
+      <h1 id="heroTitle" class="mt-4 font-display h-display">
+        Упаковка, которую <span class="text-wine">узнают</span>
       </h1>
-      <p class="mt-5 max-w-[26rem] text-[16px] leading-relaxed text-graphite">
-        Печатаем ваш логотип на лентах, наклейках, бумаге, скотче, 3D-стикерах и шоколаде.
+      <p class="mt-5 max-w-[25rem] text-[16px] sm:text-[17px] text-muted">
+        Печатаем ваш логотип на&nbsp;лентах, наклейках, бумаге, скотче, 3D&#8209;стикерах и&nbsp;шоколаде.
       </p>
-      <a href="#catalog" class="mt-8 inline-flex items-center gap-2.5 rounded-full bg-ink text-milk pl-6 pr-5 py-3.5 text-[15px] font-medium hover:bg-rose transition-colors">
+      <a href="#catalog" class="btn-wine mt-8 inline-flex items-center gap-2.5 rounded-full pl-6 pr-5 py-3.5 text-[15px]">
         Выбрать продукцию
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
       </a>
@@ -140,8 +155,8 @@
   <!-- ================= КАТАЛОГ ================= -->
   <section id="catalog" class="wrap pb-20 sm:pb-28" aria-labelledby="catTitle">
     <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
-      <h2 id="catTitle" class="font-display text-[34px] sm:text-[46px] leading-[1.06] font-normal">Каталог</h2>
-      <p class="text-[14px] text-graphite">8 видов продукции · цены по прайсу</p>
+      <h2 id="catTitle" class="font-display h-section">Каталог</h2>
+      <p class="text-[14px] text-muted">8 видов продукции · цены по&nbsp;прайсу</p>
     </div>
     <div id="catalogGrid" class="mt-8 sm:mt-10 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-14"></div>
   </section>
@@ -149,7 +164,7 @@
   <!-- ================= КАК ЗАКАЗАТЬ ================= -->
   <section id="how" class="wrap pb-24 sm:pb-32" aria-labelledby="howTitle">
     <div class="border-t border-line pt-10 sm:pt-14 grid gap-8 md:grid-cols-12">
-      <h2 id="howTitle" class="md:col-span-4 font-display text-[34px] sm:text-[42px] leading-[1.06] font-normal">Как заказать</h2>
+      <h2 id="howTitle" class="md:col-span-4 font-display h-section">Как заказать</h2>
       <ol id="steps" class="md:col-span-8 grid gap-7 sm:grid-cols-3 sm:gap-8"></ol>
     </div>
   </section>
@@ -157,15 +172,15 @@
   <!-- ================= КОНТАКТЫ (появляется, когда заполнен CONTACTS) ================= -->
   <section id="contacts" class="wrap pb-24" aria-labelledby="contactsTitle" hidden>
     <div class="border-t border-line pt-10 sm:pt-14 grid gap-8 md:grid-cols-12">
-      <h2 id="contactsTitle" class="md:col-span-4 font-display text-[34px] sm:text-[42px] leading-[1.06] font-normal">Контакты</h2>
+      <h2 id="contactsTitle" class="md:col-span-4 font-display h-section">Контакты</h2>
       <div id="contactLinks" class="md:col-span-8 flex flex-wrap gap-3"></div>
     </div>
   </section>
 </main>
 
-<footer class="wrap py-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[12px] text-graphite border-t border-line">
-  <span class="flex items-baseline gap-1.5"><span class="font-display text-[15px] tracking-[.12em] text-ink">VASHI</span><span class="font-script text-[19px] leading-none text-rose">birki</span><span class="ml-2">© 2026</span></span>
-  <span>Цены по прайсу. Окончательную стоимость подтверждаем перед изготовлением.</span>
+<footer class="wrap py-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[13px] text-muted border-t border-line">
+  <span class="flex items-baseline gap-1.5"><span class="font-display text-[15px] tracking-[.14em] text-ink">VASHI</span><span class="font-script text-[19px] leading-none text-wine">birki</span><span class="ml-2">© 2026</span></span>
+  <span>Цены по&nbsp;прайсу. Окончательную стоимость подтверждаем перед изготовлением.</span>
 </footer>
 
 <!-- ================= ЭКРАН ТОВАРА ================= -->
@@ -175,8 +190,8 @@
   <div class="dlg-head dlg-pad flex items-center gap-3 border-b border-line pb-3">
     <span id="pThumb" class="h-14 w-12 shrink-0 overflow-hidden rounded-lg bg-tile" aria-hidden="true"></span>
     <div class="min-w-0 flex-1">
-      <h2 id="pTitle" tabindex="-1" class="font-display text-[21px] sm:text-[24px] leading-tight outline-none"></h2>
-      <p id="pSpec" class="text-[12.5px] text-graphite leading-snug"></p>
+      <h2 id="pTitle" tabindex="-1" class="font-display text-[21px] sm:text-[24px] leading-[1.2] outline-none"></h2>
+      <p id="pSpec" class="mt-0.5 text-[13px] text-muted leading-snug"></p>
     </div>
     <button id="pClose" type="button" class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-tile transition-colors" aria-label="Закрыть и вернуться в каталог">
       <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -189,15 +204,15 @@
 
       <div class="flex flex-col gap-2">
         <div class="flex items-baseline justify-between gap-3">
-          <label for="runSelect" class="text-[12.5px] font-medium text-graphite">Тираж</label>
-          <button id="priceToggle" type="button" class="inline-flex items-center gap-1 text-[12.5px] font-medium text-rose underline decoration-1 underline-offset-4" aria-expanded="false" aria-controls="priceList">
+          <label for="runSelect" class="text-[13px] font-medium text-muted">Тираж</label>
+          <button id="priceToggle" type="button" class="inline-flex items-center gap-1 text-[13px] font-semibold text-wine underline decoration-1 underline-offset-4 hover:text-wine-deep" aria-expanded="false" aria-controls="priceList">
             Посмотреть прайс
           </button>
         </div>
-        <select id="runSelect" class="field w-full px-3.5 py-3 text-[15px] tnum"></select>
+        <select id="runSelect" class="field w-full px-3.5 py-3 text-[16px] font-medium tnum"></select>
         <div id="metersBox" class="flex items-center gap-3 pt-1" hidden>
-          <label for="meters" class="text-[13px] text-graphite">Метров, от 100 до 500</label>
-          <input id="meters" type="number" inputmode="numeric" min="100" max="500" step="1" value="200" class="field w-28 px-3 py-2.5 text-[15px] tnum">
+          <label for="meters" class="text-[14px] text-muted">Метров, от 100 до 500</label>
+          <input id="meters" type="number" inputmode="numeric" min="100" max="500" step="1" value="200" class="field w-28 px-3 py-2.5 text-[16px] tnum">
         </div>
         <div id="priceList" class="pt-2" hidden></div>
       </div>
@@ -205,8 +220,8 @@
       <details id="pMore" class="border-t border-line">
         <summary class="flex items-center justify-between gap-3 py-4">
           <span class="min-w-0">
-            <span class="block text-[14px] font-medium">Оформление и пожелания</span>
-            <span id="pMoreHint" class="block text-[12.5px] text-graphite"></span>
+            <span class="block text-[15px] font-semibold">Оформление и пожелания</span>
+            <span id="pMoreHint" class="block text-[13px] text-muted"></span>
           </span>
           <svg class="chev h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </summary>
@@ -214,35 +229,35 @@
           <div id="colorField"></div>
           <div id="extrasField" class="flex flex-col gap-3"></div>
           <fieldset class="min-w-0">
-            <legend class="text-[12.5px] font-medium text-graphite mb-2">Разработка макета</legend>
+            <legend class="text-[13px] font-medium text-muted mb-2">Разработка макета</legend>
             <div id="layoutChoices" class="flex flex-wrap gap-2"></div>
-            <p id="layoutFee" class="mt-2 text-[12.5px] text-graphite"></p>
+            <p id="layoutFee" class="mt-2 text-[13px] text-muted"></p>
           </fieldset>
           <div id="designsBox" class="flex items-center gap-3" hidden>
-            <label for="designs" class="text-[13px] text-graphite">Разных дизайнов</label>
-            <input id="designs" type="number" inputmode="numeric" min="1" max="50" step="1" value="1" class="field w-20 px-3 py-2.5 text-[15px] tnum">
+            <label for="designs" class="text-[14px] text-muted">Разных дизайнов</label>
+            <input id="designs" type="number" inputmode="numeric" min="1" max="50" step="1" value="1" class="field w-20 px-3 py-2.5 text-[16px] tnum">
           </div>
           <div class="flex flex-col gap-2 min-w-0">
-            <label for="comment" class="text-[12.5px] font-medium text-graphite">Комментарий</label>
-            <textarea id="comment" rows="3" class="field w-full min-w-0 px-3.5 py-3 text-[14px]" placeholder="Например: логотип в два цвета, нужно к 15 декабря"></textarea>
+            <label for="comment" class="text-[13px] font-medium text-muted">Комментарий</label>
+            <textarea id="comment" rows="3" class="field w-full min-w-0 px-3.5 py-3 text-[16px]" placeholder="Например: логотип в два цвета, нужно к 15 декабря"></textarea>
           </div>
         </div>
       </details>
 
       <div id="copyFallback" class="flex flex-col gap-2" hidden>
-        <label for="fallbackText" class="text-[12.5px] font-medium text-graphite">Текст заявки — выделите и скопируйте</label>
-        <textarea id="fallbackText" readonly rows="8" class="field w-full min-w-0 px-3.5 py-3 text-[13px]"></textarea>
+        <label for="fallbackText" class="text-[13px] font-medium text-muted">Текст заявки — выделите и скопируйте</label>
+        <textarea id="fallbackText" readonly rows="8" class="field w-full min-w-0 px-3.5 py-3 text-[14px]"></textarea>
       </div>
     </form>
   </div>
 
   <div class="dlg-foot dlg-pad relative border-t border-line bg-milk pt-3">
-    <div id="toast" role="status" aria-live="polite" class="toast pointer-events-none absolute left-1/2 -top-14 rounded-full bg-ink text-milk px-4 py-2.5 text-[13px] text-center" style="width: max-content; max-width: calc(100% - 32px); opacity: 0; transform: translate(-50%, 8px);"></div>
+    <div id="toast" role="status" aria-live="polite" class="toast pointer-events-none absolute left-1/2 -top-14 rounded-full bg-wine-deep text-surface px-4 py-2.5 text-[14px] font-medium text-center" style="width: max-content; max-width: calc(100% - 32px); opacity: 0; transform: translate(-50%, 8px);"></div>
     <div class="flex items-center gap-3">
       <div class="min-w-0 flex-1" aria-live="polite">
-        <p id="sumLine" class="text-[12px] text-graphite tnum leading-tight"></p>
-        <p id="sumTotal" class="mt-0.5 font-display text-[27px] leading-none tnum"></p>
-        <p id="sumExtra" class="mt-1 text-[11.5px] text-graphite leading-snug"></p>
+        <p id="sumLine" class="text-[13px] text-muted tnum leading-tight"></p>
+        <p id="sumTotal" class="mt-1 text-[26px] font-semibold leading-none tracking-[-.01em] text-ink tnum"></p>
+        <p id="sumExtra" class="mt-1 text-[13px] text-muted leading-snug"></p>
       </div>
       <div id="pActions" class="flex shrink-0 items-center gap-2"></div>
     </div>
@@ -403,9 +418,9 @@ const LAYOUT_CHOICES = [{ v: 'need', label: 'Нужна' }, { v: 'own', label: '
 
 /* ===================== ИЛЛЮСТРАЦИИ (для товаров без фотографий) ===================== */
 function illo(kind) {
-  const ink = '#2C2A29', soft = '#FBF9F6', pr = '#C97A7E', sw = 1.3;
+  const ink = '#342A2B', soft = '#FFFCF7', pr = '#702D3E', tile = '#EEE6DB', tint = '#EAD8D8', sw = 1.3;
   const wrap = inner => `<svg viewBox="0 0 200 250" class="h-full w-full" role="img" aria-label="Иллюстрация" preserveAspectRatio="xMidYMid meet"><ellipse cx="100" cy="222" rx="62" ry="6" fill="${ink}" opacity=".06"/>${inner}</svg>`;
-  const mark = (x, y, r = 0, s = 1, fill = pr) => `<text transform="translate(${x} ${y}) rotate(${r}) scale(${s})" font-family="Playfair Display, Georgia, serif" font-size="9" letter-spacing="1.5" fill="${fill}">VASHI</text>`;
+  const mark = (x, y, r = 0, s = 1, fill = pr) => `<text transform="translate(${x} ${y}) rotate(${r}) scale(${s})" font-family="Prata, Georgia, serif" font-size="9" letter-spacing="1.5" fill="${fill}">VASHI</text>`;
   if (kind === 'silicone') return wrap(`
     <path d="M118 112 V214 L133 204 L148 214 V112 Z" fill="${soft}" stroke="${ink}" stroke-width="${sw}" stroke-linejoin="round"/>
     ${mark(136, 136, 90)}${mark(136, 172, 90)}
@@ -413,19 +428,19 @@ function illo(kind) {
     <circle cx="100" cy="104" r="48" fill="none" stroke="${ink}" stroke-width=".6" opacity=".25"/>
     <circle cx="100" cy="104" r="40" fill="none" stroke="${ink}" stroke-width=".6" opacity=".2"/>
     <circle cx="100" cy="104" r="32" fill="none" stroke="${ink}" stroke-width=".6" opacity=".15"/>
-    <circle cx="100" cy="104" r="17" fill="#EFEAE4" stroke="${ink}" stroke-width="${sw}"/>`);
+    <circle cx="100" cy="104" r="17" fill="${tile}" stroke="${ink}" stroke-width="${sw}"/>`);
   if (kind === 'tape') return wrap(`
     <path d="M100 168 H24 V190 H100" fill="${soft}" stroke="${ink}" stroke-width="${sw}" stroke-linejoin="round"/>
     ${mark(32, 182, 0, 1)}${mark(70, 182, 0, 1)}
     <circle cx="112" cy="118" r="60" fill="${soft}" stroke="${ink}" stroke-width="${sw}"/>
     <circle cx="112" cy="118" r="52" fill="none" stroke="${ink}" stroke-width=".6" opacity=".2"/>
-    <circle cx="112" cy="118" r="34" fill="#EFEAE4" stroke="${ink}" stroke-width="${sw}"/>
+    <circle cx="112" cy="118" r="34" fill="${tile}" stroke="${ink}" stroke-width="${sw}"/>
     <circle cx="112" cy="118" r="28" fill="none" stroke="${ink}" stroke-width=".7" opacity=".35"/>`);
   if (kind === 'tissue') {
     let pat = '';
     for (let y = 0; y < 6; y++) for (let x = 0; x < 3; x++) pat += mark(56 + x * 34 + (y % 2) * 17, 68 + y * 26, -4, .8);
     return wrap(`
-    <path d="M44 52 L150 40 L162 196 L54 210 Z" fill="#fff" stroke="${ink}" stroke-width=".8" opacity=".9"/>
+    <path d="M44 52 L150 40 L162 196 L54 210 Z" fill="${soft}" stroke="${ink}" stroke-width=".8" opacity=".9"/>
     <defs><clipPath id="clipTissue"><path d="M38 62 L142 54 L154 206 L48 214 Z"/></clipPath></defs>
     <path d="M36 60 L144 52 L156 208 L46 216 Z" fill="${soft}" stroke="${ink}" stroke-width="${sw}" stroke-linejoin="round"/>
     <g opacity=".75" clip-path="url(#clipTissue)">${pat}</g>
@@ -438,20 +453,22 @@ function illo(kind) {
     <rect x="42" y="92" width="116" height="112" rx="3" fill="${soft}" stroke="${ink}" stroke-width="${sw}"/>
     <defs><clipPath id="clipWrap"><rect x="43" y="93" width="114" height="110"/></clipPath></defs>
     <g opacity=".7" clip-path="url(#clipWrap)">${pat}</g>
-    <rect x="93" y="92" width="14" height="112" fill="#F2E1DF" stroke="${ink}" stroke-width=".8"/>
-    <path d="M100 92 C82 62 58 70 72 88 C78 95 92 94 100 92 C108 94 122 95 128 88 C142 70 118 62 100 92 Z" fill="#F2E1DF" stroke="${ink}" stroke-width="${sw}" stroke-linejoin="round"/>`);
+    <rect x="93" y="92" width="14" height="112" fill="${tint}" stroke="${ink}" stroke-width=".8"/>
+    <path d="M100 92 C82 62 58 70 72 88 C78 95 92 94 100 92 C108 94 122 95 128 88 C142 70 118 62 100 92 Z" fill="${tint}" stroke="${ink}" stroke-width="${sw}" stroke-linejoin="round"/>`);
   }
   if (kind === 'choco') return wrap(`
-    <rect x="66" y="36" width="70" height="176" rx="5" fill="#E9E2DA" stroke="${ink}" stroke-width="${sw}"/>
+    <rect x="66" y="36" width="70" height="176" rx="5" fill="${tile}" stroke="${ink}" stroke-width="${sw}"/>
     <path d="M66 70 H136 M66 104 H136 M101 36 V104" stroke="${ink}" stroke-width=".7" opacity=".3"/>
     <rect x="66" y="110" width="70" height="102" rx="0" fill="${soft}" stroke="${ink}" stroke-width="${sw}"/>
-    <text x="101" y="160" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="13" letter-spacing="2" fill="${ink}">VASHI</text>
+    <text x="101" y="160" text-anchor="middle" font-family="Prata, Georgia, serif" font-size="13" letter-spacing="2" fill="${ink}">VASHI</text>
     <text x="101" y="180" text-anchor="middle" font-family="Pinyon Script, cursive" font-size="17" fill="${pr}">birki</text>`);
   return wrap('');
 }
 
 /* ===================== ВСПОМОГАТЕЛЬНОЕ ===================== */
 const PHOTOS = window.PHOTOS || {};
+// неразрывный пробел после коротких предлогов и союзов — без «висячих» слов в строке
+const nb = t => String(t).replace(/(^|[\s(«])(и|в|во|с|со|к|ко|у|о|об|а|на|по|за|от|до|из|не|ни|без|для|при|под|над|про|но|или)\s/gi, '$1$2\u00a0');
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -481,16 +498,16 @@ function renderHome() {
     const f = fromPrice(p);
     return `<button type="button" class="card group min-w-0 self-start text-left" data-open="${p.id}" aria-haspopup="dialog" aria-controls="product">
       <span class="card-img block overflow-hidden rounded-[18px] bg-tile aspect-[4/5]">${mediaHTML(p)}</span>
-      <span class="mt-3 block font-display text-[17px] sm:text-[20px] leading-snug">${p.title}</span>
-      <span class="mt-1 block text-[12.5px] sm:text-[13px] text-graphite tnum">от ${rub(f.total)} за ${f.qtyLabel}</span>
+      <span class="mt-3 block text-[15px] sm:text-[17px] font-semibold leading-snug transition-colors group-hover:text-wine">${p.title}</span>
+      <span class="mt-1 block text-[13px] sm:text-[14px] text-muted tnum">от <span class="font-semibold text-ink">${rub(f.total)}</span> за&nbsp;${f.qtyLabel}</span>
     </button>`;
   }).join('');
   document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => openProduct(b.dataset.open, b)));
   $('#steps').innerHTML = STEPS.map((s, i) => `
     <li class="min-w-0">
-      <span class="font-display italic text-[30px] leading-none text-rose tnum" aria-hidden="true">${i + 1}</span>
-      <h3 class="mt-3 font-display text-[20px] leading-snug">${s[0]}</h3>
-      <p class="mt-1.5 text-[14px] text-graphite">${s[1]}</p>
+      <span class="font-display text-[30px] leading-none text-wine tnum" aria-hidden="true">${i + 1}</span>
+      <h3 class="mt-3 text-[17px] font-semibold leading-snug">${nb(s[0])}</h3>
+      <p class="mt-1.5 text-[15px] text-muted">${nb(s[1])}</p>
     </li>`).join('');
   const items = [
     CONTACTS.whatsapp && { href: CONTACTS.whatsapp, label: 'WhatsApp' },
@@ -500,8 +517,8 @@ function renderHome() {
   const any = items.length > 0 || !!CONTACTS.phone;
   $('#contacts').hidden = !any;
   document.querySelectorAll('[data-contacts-only]').forEach(a => { a.hidden = !any; });
-  if (any) $('#contactLinks').innerHTML = items.map(i => `<a href="${esc(i.href)}" target="_blank" rel="noopener" class="rounded-full border border-ink px-6 py-3 text-[14px] font-medium hover:bg-ink hover:text-milk transition-colors">${i.label}</a>`).join('')
-    + (CONTACTS.phone ? `<p class="w-full font-display text-[24px] tnum select-all">${esc(CONTACTS.phone)}</p>` : '');
+  if (any) $('#contactLinks').innerHTML = items.map(i => `<a href="${esc(i.href)}" target="_blank" rel="noopener" class="rounded-full border border-wine px-6 py-3 text-[15px] font-semibold text-wine hover:bg-wine hover:text-surface transition-colors">${i.label}</a>`).join('')
+    + (CONTACTS.phone ? `<p class="w-full text-[22px] font-semibold tnum select-all">${esc(CONTACTS.phone)}</p>` : '');
 }
 
 /* ===================== СОСТОЯНИЕ ТОВАРОВ ===================== */
@@ -610,8 +627,8 @@ function renderMain() {
   const p = current, m = memory[p.id];
   $('#pDims').innerHTML = p.dims.map(d => `
     <fieldset class="min-w-0">
-      <legend class="text-[12.5px] font-medium text-graphite mb-2">${d.label}</legend>
-      <div class="flex flex-wrap gap-2">${d.values.map(v => `<button type="button" class="chip rounded-full border border-line bg-white px-3.5 py-2 text-[13.5px] tnum hover:border-ink" data-dim="${d.id}" data-v="${v.v}" aria-pressed="${state[d.id] === v.v}">${v.label}</button>`).join('')}</div>
+      <legend class="text-[13px] font-medium text-muted mb-2">${d.label}</legend>
+      <div class="flex flex-wrap gap-2">${d.values.map(v => `<button type="button" class="chip rounded-full px-4 py-2 text-[14px] tnum" data-dim="${d.id}" data-v="${v.v}" aria-pressed="${state[d.id] === v.v}">${v.label}</button>`).join('')}</div>
     </fieldset>`).join('');
   document.querySelectorAll('[data-dim]').forEach(b => b.addEventListener('click', () => setState({ [b.dataset.dim]: b.dataset.v })));
 
@@ -640,15 +657,15 @@ function renderPriceList() {
   const groups = priceGroups(current);
   $('#priceList').innerHTML = groups.map((g, gi) => `
     <div class="pt-2">
-      ${g.title ? `<p class="pt-2 pb-1 text-[12px] font-medium text-moss">${g.title}</p>` : ''}
+      ${g.title ? `<p class="pt-3 pb-1.5 text-[13px] font-semibold text-wine">${g.title}</p>` : ''}
       <ul class="border-t border-line">${g.rows.map((r, ri) => {
         const inGroup = g.keepFormat ? state.format !== 'big' : Object.entries(g.set).every(([k, v]) => state[k] === v);
         const active = inGroup && state.run === r.v;
-        const right = r.request ? '<span class="font-normal text-graphite">по запросу</span>' : r.range ? `от ${rub(r.unitPrice * r.range[0])}` : rub(r.total);
-        return `<li class="border-b border-line"><button type="button" class="flex w-full items-baseline gap-3 py-2 text-left text-[13.5px] tnum transition-colors hover:text-rose ${active ? 'text-rose' : ''}" data-pp="${gi}:${ri}" aria-current="${active}">
+        const right = r.request ? '<span class="font-normal text-muted">по запросу</span>' : r.range ? `от ${rub(r.unitPrice * r.range[0])}` : rub(r.total);
+        return `<li class="border-b border-line"><button type="button" class="flex w-full items-baseline gap-3 py-2.5 text-left text-[15px] tnum transition-colors hover:text-wine ${active ? 'text-wine font-semibold' : ''}" data-pp="${gi}:${ri}" aria-current="${active}">
           <span class="min-w-0 flex-1">${r.qtyLabel}</span>
-          <span class="shrink-0 text-[12.5px] text-graphite">${r.unitPrice != null ? unitPriceText(r) : ''}</span>
-          <span class="w-[5.2rem] shrink-0 text-right font-medium">${right}</span>
+          <span class="shrink-0 text-[13px] font-normal text-muted">${r.unitPrice != null ? unitPriceText(r) : ''}</span>
+          <span class="w-[5.6rem] shrink-0 text-right font-semibold">${right}</span>
         </button></li>`; }).join('')}</ul>
     </div>`).join('');
   document.querySelectorAll('[data-pp]').forEach(b => b.addEventListener('click', () => {
@@ -664,23 +681,23 @@ function renderMore() {
   const p = current, m = memory[p.id], c = p.color;
   const cf = $('#colorField');
   if (!c) cf.innerHTML = '';
-  else if (c.type === 'select') cf.innerHTML = `<div class="flex flex-col gap-2 min-w-0"><label for="color" class="text-[12.5px] font-medium text-graphite">Цвет печати</label>
-      <select id="color" class="field w-full px-3.5 py-3 text-[14px]"><option value="">Подобрать при обсуждении</option>${c.options.map(o => `<option value="${o}">${o[0].toUpperCase() + o.slice(1)}</option>`).join('')}</select></div>`;
-  else cf.innerHTML = `<div class="flex flex-col gap-2 min-w-0"><label for="color" class="text-[12.5px] font-medium text-graphite">Цвет печати</label>
-      <input id="color" type="text" autocomplete="off" class="field w-full px-3.5 py-3 text-[14px]" placeholder="Например, пудровый" aria-describedby="colorHint">
-      <p id="colorHint" class="text-[12px] text-graphite">${c.hint}</p></div>`;
+  else if (c.type === 'select') cf.innerHTML = `<div class="flex flex-col gap-2 min-w-0"><label for="color" class="text-[13px] font-medium text-muted">Цвет печати</label>
+      <select id="color" class="field w-full px-3.5 py-3 text-[16px]"><option value="">Подобрать при обсуждении</option>${c.options.map(o => `<option value="${o}">${o[0].toUpperCase() + o.slice(1)}</option>`).join('')}</select></div>`;
+  else cf.innerHTML = `<div class="flex flex-col gap-2 min-w-0"><label for="color" class="text-[13px] font-medium text-muted">Цвет печати</label>
+      <input id="color" type="text" autocomplete="off" class="field w-full px-3.5 py-3 text-[16px]" placeholder="Например, пудровый" aria-describedby="colorHint">
+      <p id="colorHint" class="text-[13px] text-muted">${nb(c.hint)}</p></div>`;
   const colorEl = $('#color');
   if (colorEl) { colorEl.value = m.color; colorEl.addEventListener(colorEl.tagName === 'SELECT' ? 'change' : 'input', () => { m.color = colorEl.value; checkColor(); update(); }); }
   checkColor();
 
   $('#extrasField').innerHTML = (p.extras || []).map(x => `
     <label class="flex items-start gap-3 cursor-pointer select-none">
-      <input type="checkbox" id="x-${x.id}" data-x="${x.id}" class="mt-1 h-4 w-4 shrink-0" style="accent-color: var(--ink);" ${m.extras[x.id] ? 'checked' : ''}>
-      <span class="text-[14px] leading-snug">${x.label}<span class="block text-[12px] text-graphite">${x.hint}</span></span>
+      <input type="checkbox" id="x-${x.id}" data-x="${x.id}" class="mt-1 h-4 w-4 shrink-0" style="accent-color: var(--wine);" ${m.extras[x.id] ? 'checked' : ''}>
+      <span class="text-[15px] font-medium leading-snug">${x.label}<span class="mt-0.5 block text-[13px] font-normal text-muted">${nb(x.hint)}</span></span>
     </label>`).join('');
   document.querySelectorAll('[data-x]').forEach(cb => cb.addEventListener('change', () => { m.extras[cb.dataset.x] = cb.checked; update(); }));
 
-  $('#layoutChoices').innerHTML = LAYOUT_CHOICES.map(l => `<button type="button" class="chip rounded-full border border-line bg-white px-3.5 py-2 text-[13.5px] hover:border-ink" data-layout="${l.v}" aria-pressed="${shared.layout === l.v}">${l.label}</button>`).join('');
+  $('#layoutChoices').innerHTML = LAYOUT_CHOICES.map(l => `<button type="button" class="chip rounded-full px-4 py-2 text-[14px]" data-layout="${l.v}" aria-pressed="${shared.layout === l.v}">${l.label}</button>`).join('');
   document.querySelectorAll('[data-layout]').forEach(b => b.addEventListener('click', () => {
     shared.layout = b.dataset.layout;
     document.querySelectorAll('[data-layout]').forEach(x => x.setAttribute('aria-pressed', String(shared.layout === x.dataset.layout)));
@@ -694,7 +711,7 @@ function checkColor() {
   const c = current.color, hint = $('#colorHint'); if (!hint || !c) return;
   const bad = c.forbid && c.forbid.test(memory[current.id].color);
   hint.textContent = bad ? 'Золото, серебро и белый для этой бумаги недоступны.' : c.hint;
-  hint.style.color = bad ? 'var(--rose)' : '';
+  hint.style.color = bad ? 'var(--wine)' : '';
 }
 $('#designs').addEventListener('input', () => { memory[current.id].designs = $('#designs').value; update(); });
 $('#comment').addEventListener('input', () => { shared.comment = $('#comment').value; update(); });
@@ -806,11 +823,11 @@ function copyText() {
 }
 const copyIcon = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
 function renderActions(c) {
-  const primary = 'inline-flex items-center justify-center rounded-full bg-ink text-milk px-5 py-3.5 text-[14px] font-medium hover:bg-rose transition-colors whitespace-nowrap';
+  const primary = 'btn-wine inline-flex items-center justify-center rounded-full px-5 py-3.5 text-[15px] whitespace-nowrap';
   let html = '';
   if (CONTACTS.whatsapp) html = `<a id="sendWa" class="${primary}" target="_blank" rel="noopener" href="${esc(CONTACTS.whatsapp)}">Отправить в WhatsApp</a>`;
   else if (CONTACTS.telegram) html = `<a id="sendTg" class="${primary}" target="_blank" rel="noopener" href="${esc(CONTACTS.telegram)}">Написать в Telegram</a>`;
-  if (html) html += `<button id="copyBtn" type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line hover:border-ink transition-colors" aria-label="Скопировать текст заявки">${copyIcon}</button>`;
+  if (html) html += `<button id="copyBtn" type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line text-wine hover:border-wine transition-colors" aria-label="Скопировать текст заявки">${copyIcon}</button>`;
   else html = `<button id="copyBtn" type="button" class="${primary}">${c.request ? 'Скопировать запрос' : 'Скопировать заявку'}</button>`;
   $('#pActions').innerHTML = html;
   $('#copyBtn').addEventListener('click', copyText);
