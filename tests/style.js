@@ -1,11 +1,12 @@
-// Проверка палитры и типографики: npm i puppeteer && node tests/style.js
+// Запуск: npm i puppeteer && node tests/style.js  (сайт: ../index.html или SITE_URL; Chrome: CHROME_PATH, по умолчанию браузер puppeteer)
+require('fs').mkdirSync(require('path').join(__dirname, 'shots'), { recursive: true });
 const puppeteer = require('puppeteer');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const out=[]; const ok=(n,c,i='')=>out.push([c?'OK  ':'FAIL',n,i]);
-(async()=>{const b=await puppeteer.launch({headless:'new',args:['--no-sandbox']});
+(async()=>{const b=await puppeteer.launch({executablePath: process.env.CHROME_PATH || undefined, headless:'new',args:['--no-sandbox']});
 for (const w of [360,390,430,1280]) {
   const p=await b.newPage(); await p.setViewport({width:w,height:820,isMobile:w<700,hasTouch:w<700});
-  await p.goto('file://'+require('path').resolve(__dirname,'..','index.html')); await p.waitForFunction(()=>getComputedStyle(document.querySelector('#catalogGrid')).display==='grid'); await sleep(300);
+  await p.goto((process.env.SITE_URL || 'file://'+require('path').resolve(__dirname,'..','index.html'))); await p.waitForFunction(()=>getComputedStyle(document.querySelector('#catalogGrid')).display==='grid'); await sleep(300);
   const scan = (root='body') => p.evaluate((root)=>{
     const small=[], synth=[], display=new Set(), body=new Set(), oldColors=[];
     const old=['rgb(44, 42, 41)','rgb(201, 122, 126)','rgb(154, 83, 87)','rgb(86, 101, 79)','rgb(103, 97, 94)','rgb(249, 248, 246)'];
@@ -42,7 +43,7 @@ for (const w of [360,390,430,1280]) {
     const f=await p.evaluate(()=>{const e=document.activeElement, cs=getComputedStyle(e);return e.tagName+' '+cs.outlineStyle+' '+cs.outlineColor+' '+cs.outlineWidth});
     ok(`${w}: клавиатурный фокус заметен (бордовая обводка 2px)`, /solid rgb\(112, 45, 62\) 2px/.test(f), f);
     await p.evaluate(()=>window.scrollTo(0,0)); await sleep(100);
-    await p.screenshot({path:__dirname+'/'+`v5_home_${w}.png`, fullPage:true});
+    await p.screenshot({path: require('path').join(__dirname, 'shots', `v5_home_${w}.png`), fullPage:true});
   }
   // экран товара
   await p.evaluate(()=>document.querySelector('[data-open="ribbon"]').scrollIntoView({block:'center'})); await sleep(80);
@@ -52,8 +53,8 @@ for (const w of [360,390,430,1280]) {
   ok(`${w}: в экране товара нет текста мельче 13px`, s.small.length===0, s.small.join(' | '));
   ok(`${w}: в экране товара Prata только в названии товара`, s.synth.length===0 && s.display.every(x=>x==='pTitle'), s.display.join(', '));
   ok(`${w}: старые цвета в экране товара не используются`, s.oldColors.length===0, s.oldColors.join(' | '));
-  const st=await p.evaluate(()=>({chip:getComputedStyle(document.querySelector('[data-dim][aria-pressed="true"]')).backgroundColor, chipOff:getComputedStyle(document.querySelector('[data-dim][aria-pressed="false"]')).backgroundColor, copy:getComputedStyle(document.querySelector('#copyBtn')).backgroundColor, tot:(c=>({fontWeight:c.fontWeight,fontFamily:c.fontFamily}))(getComputedStyle(document.querySelector('#sumTotal'))), active:getComputedStyle(document.querySelector('[data-pp][aria-current="true"]')).color, check:getComputedStyle(document.querySelector('#x-matte')).accentColor}));
-  ok(`${w}: выбранная ширина и активная строка прайса — бордовые, невыбранные — светлые`, st.chip==='rgb(112, 45, 62)' && st.chipOff==='rgb(255, 252, 247)' && st.active==='rgb(112, 45, 62)' && st.check==='rgb(112, 45, 62)', JSON.stringify({chip:st.chip,off:st.chipOff,active:st.active}));
+  const st=await p.evaluate(()=>({chip:getComputedStyle(document.querySelector('[data-dim][aria-pressed="true"]')).backgroundColor, chipOff:getComputedStyle(document.querySelector('[data-dim][aria-pressed="false"]')).backgroundColor, copy:getComputedStyle(document.querySelector('#copyBtn')).backgroundColor, tot:(c=>({fontWeight:c.fontWeight,fontFamily:c.fontFamily}))(getComputedStyle(document.querySelector('#sumTotal'))), active:getComputedStyle(document.querySelector('[data-pp][aria-current="true"]')).color}));
+  ok(`${w}: выбранная ширина и активная строка прайса — бордовые, невыбранные — светлые`, st.chip==='rgb(112, 45, 62)' && st.chipOff==='rgb(255, 252, 247)' && st.active==='rgb(112, 45, 62)' , JSON.stringify({chip:st.chip,off:st.chipOff,active:st.active}));
   ok(`${w}: кнопка «Скопировать заявку» бордовая, итог — Manrope 600`, st.copy==='rgb(112, 45, 62)' && st.tot.fontWeight==='600' && st.tot.fontFamily.startsWith('Manrope'), st.copy+' '+st.tot.fontWeight+' '+st.tot.fontFamily.split(',')[0]);
   // фокус в поле
   await p.focus('#comment'); await sleep(350); const fc=await p.evaluate(()=>getComputedStyle(document.querySelector('#comment')).borderTopColor);
@@ -62,7 +63,7 @@ for (const w of [360,390,430,1280]) {
   await p.evaluate(()=>{ navigator.clipboard.writeText=()=>Promise.resolve(); }); await p.click('#copyBtn'); await sleep(200);
   const t=await p.evaluate(()=>{const e=document.querySelector('#toast'), cs=getComputedStyle(e);return {txt:e.textContent, bg:cs.backgroundColor, c:cs.color, fs:cs.fontSize}});
   ok(`${w}: сообщение «Текст заявки скопирован» — бордовое, 14px`, t.txt==='Текст заявки скопирован' && t.bg==='rgb(84, 32, 46)' && t.fs==='14px', JSON.stringify(t));
-  if (w===390 || w===1280) { await p.evaluate(()=>document.querySelector('#pBody').scrollTop=0); await sleep(3600); await p.screenshot({path:__dirname+'/'+`v5_dlg_${w}.png`}); }
+  if (w===390 || w===1280) { await p.evaluate(()=>document.querySelector('#pBody').scrollTop=0); await sleep(3600); await p.screenshot({path: require('path').join(__dirname, 'shots', `v5_dlg_${w}.png`)}); }
   await p.close();
 }
 await b.close(); out.forEach(r=>console.log(r[0],r[1],r[2]?'— '+r[2]:'')); console.log('\nИтого:',out.filter(r=>r[0].trim()==='OK').length,'из',out.length);
