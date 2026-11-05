@@ -48,13 +48,13 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
     const cat = await p.evaluate(() => {
       const cards = [...document.querySelectorAll('[data-open]')];
       return { n: cards.length, cols: new Set(cards.map(c => Math.round(c.getBoundingClientRect().left))).size,
-        parts: cards.map(c => c.children.length), heights: new Set(cards.map(c => Math.round(c.querySelector('.card-img').getBoundingClientRect().height))).size,
+        parts: cards.map(c => c.children.length), heights: new Set(cards.map(c => c.querySelector('.card-img').offsetHeight)).size,
         clipped: cards.filter(c => [...c.children].some(s => s.scrollWidth > s.clientWidth + 1)).length };
     });
-    ok(`${w}: каталог — 8 карточек, ${w < 1024 ? 2 : 4} колонки, одинаковый масштаб изображений, только фото + название + цена`, cat.n === 8 && cat.cols === (w < 1024 ? 2 : 4) && cat.heights === 1 && cat.parts.every(n => n === 3) && cat.clipped === 0, JSON.stringify(cat));
+    ok(`${w}: каталог — 8 карточек, ${w < 1024 ? 2 : 4} колонки, одинаковый масштаб изображений, фото + название + цена + «Рассчитать»`, cat.n === 8 && cat.cols === (w < 1024 ? 2 : 4) && cat.heights === 1 && cat.parts.every(n => n === 4) && cat.clipped === 0, JSON.stringify(cat));
     const home = await p.evaluate(() => document.body.innerText);
     const gal = await p.evaluate(() => ({ calc: !!document.querySelector('#calc'), works: document.querySelectorAll('#works').length, rails: document.querySelectorAll('.rail').length, slides: document.querySelectorAll('#rail figure').length }));
-    ok(`${w}: на главной нет калькулятора и мини-характеристик, одна карусель работ`, !/Соберите заказ|84 × 50|15–25 мм/.test(home.replace(/[\u00a0\u202f]/g, ' ')) && !gal.calc && gal.works === 1 && gal.rails === 1 && gal.slides === 5, JSON.stringify(gal));
+    ok(`${w}: на главной нет калькулятора и мини-характеристик, одна карусель работ`, !/Соберите заказ|84 × 50|15–25 мм/.test(home.replace(/[\u00a0\u202f]/g, ' ')) && !gal.calc && gal.works === 1 && gal.rails === 1 && gal.slides === 15, JSON.stringify(gal));
     await p.screenshot({ path: path.join(__dirname, 'shots', `v3_home_${w}.png`), fullPage: true });
 
     // каждый товар: открыть, проверить, закрыть
@@ -167,8 +167,8 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   const pick = async (k, id) => { await pkOpen(k); await p.evaluate(id => document.querySelector(`.pk-tile[data-id="${id}"]`).scrollIntoView({ block: 'center' }), id); await p.click(`.pk-tile[data-id="${id}"]`); await sleep(60); await p.click('#pkOk'); await sleep(200); };
   const fieldVal = k => p.$eval(`[data-sel="${k}"]`, el => el.textContent.trim());
   const copyText = async () => { await p.evaluate(() => { window.__c = null; navigator.clipboard.writeText = t => { window.__c = t; return Promise.resolve(); }; }); await p.click('#copyBtn'); await sleep(120); return (await p.evaluate(() => window.__c)) || ''; };
-  const fld = await p.evaluate(() => ({ btns: [...document.querySelectorAll('[data-pick]')].map(b => b.dataset.pick + ':' + b.querySelector('.cf-btn').textContent.trim()), tilesInCard: document.querySelectorAll('#pColors .pk-tile, #pColors img').length, pickerHidden: document.querySelector('#picker').hidden }));
-  ok('Лента: компактные поля «Цвет ленты» и «Цвет печати» с кнопкой «Выбрать цвет», палитры не на экране', fld.btns.join() === 'base:Выбрать цвет,print:Выбрать цвет' && fld.tilesInCard === 0 && fld.pickerHidden, JSON.stringify(fld));
+  const fld = await p.evaluate(() => ({ btns: [...document.querySelectorAll('[data-pick]')].map(b => b.dataset.pick + ':' + b.querySelector('.cf-btn').textContent.trim()), vals: [...document.querySelectorAll('#pColors [data-sel]')].map(x => x.textContent), thumbs: document.querySelectorAll('#pColors .cf-thumb img').length, tilesInCard: document.querySelectorAll('#pColors .pk-tile').length, pickerHidden: document.querySelector('#picker').hidden }));
+  ok('Лента: компактные поля цвета, по умолчанию выбраны «Белый» и «Золото» с миниатюрами, палитры не на экране', fld.btns.join() === 'base:Изменить,print:Изменить' && fld.vals.join() === 'Белый,Золото' && fld.thumbs === 2 && fld.tilesInCard === 0 && fld.pickerHidden, JSON.stringify(fld));
   const c20 = await pkList('base');
   const n20 = c20.map(x => x.name);
   ok('Глянцевый сатин 20 мм: 55 оттенков поставщика с точными названиями', c20.length === 55 && ['Королевский Синий', 'Арктический циклон', 'Пион', 'Белый'].every(x => n20.includes(x)) && !n20.includes('Алый Кардинал') && !n20.includes('Бычья кровь') && !n20.some(x => /^(красный|синий)$/i.test(x) && false), c20.length + ': ' + n20.slice(0, 8).join('|'));
@@ -191,7 +191,7 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   ok('Поиск по названию находит оттенок', vis.join() === 'Голубая Лагуна', vis.join());
   await chip(p, 'width', '20'); await sleep(80);
   const nt1 = await p.evaluate(() => { const n = document.querySelector('#notice-base'); return { shown: !!n && !n.hidden, txt: n ? n.textContent : '', b: document.querySelector('[data-sel="base"]').textContent, pr: document.querySelector('[data-sel="print"]').textContent }; });
-  ok('Смена ширины: «Алый Кардинал» (нет в 20 мм) сброшен с подсказкой, печать сохранена', nt1.shown && /Алый Кардинал/.test(nt1.txt) && /Выбрать цвет/.test(nt1.txt) && nt1.b === 'Не выбран' && nt1.pr === 'Золото', JSON.stringify(nt1));
+  ok('Смена ширины: «Алый Кардинал» (нет в 20 мм) заменён на «Белый» с подсказкой, печать сохранена', nt1.shown && /Алый Кардинал/.test(nt1.txt) && /Пока выбран «Белый»/.test(nt1.txt) && nt1.b === 'Белый' && nt1.pr === 'Золото', JSON.stringify(nt1));
   await chip(p, 'material', 'matte');
   const cm = await pkList('base');
   ok('Матовый сатин: своя палитра поставщика (15 оттенков)', cm.length === 15 && cm.map(x => x.name).includes('Губная Помада') && cm.every(x => x.id.startsWith('ms-')), cm.length + ': ' + cm.map(x => x.name).slice(0, 5).join('|'));
@@ -226,15 +226,15 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   const perForm = {};
   for (const f of ['c5', 's5', 'r46', 'r28']) { await chip(p, 'format', f); perForm[f] = (await pkList('base')); }
   await chip(p, 'format', 'big'); const bigF = await p.evaluate(() => ({ btn: !!document.querySelector('[data-pick="base"]'), txt: document.querySelector('#pColors').textContent }));
-  ok('Наклейки: цвета основы по форме и размеру поставщика (круг 49 мм — 16, квадрат 50 мм — 4, прямоугольники — белый и прозрачный, 75 × 120 — уточнить)',
-    perForm.c5.length === 16 && perForm.s5.map(x => x.name).join('|') === 'Белый|Прозрачный|Чёрный|Шоколадный' && perForm.r46.map(x => x.name).join('|') === 'Белый|Прозрачный' && perForm.r28.map(x => x.name).join('|') === 'Белый|Прозрачный' && !bigF.btn && /уточним/.test(bigF.txt)
-    && ['c5', 's5', 'r46', 'r28'].every(f => perForm[f].every(x => x.id.startsWith('vs-' + f + '-'))),
+  ok('Наклейки: цвета основы по форме и размеру поставщика (круг 5 см — 16 поставщика + 6 клиентки, квадрат 50 мм — 4, прямоугольники — белый и прозрачный, 75 × 120 — уточнить)',
+    perForm.c5.length === 22 && ['Фисташка', 'Бордо', 'Шоколад', 'Молочный', 'Лаванда', 'Нежно-розовый'].every(n => perForm.c5.some(x => x.name === n)) && perForm.s5.map(x => x.name).join('|') === 'Белый|Прозрачный|Чёрный|Шоколадный' && perForm.r46.map(x => x.name).join('|') === 'Белый|Прозрачный' && perForm.r28.map(x => x.name).join('|') === 'Белый|Прозрачный' && !bigF.btn && /уточним/.test(bigF.txt)
+    && ['c5', 's5', 'r46', 'r28'].every(f => perForm[f].every(x => x.id.startsWith('vs-' + f + '-') || x.id.startsWith('vk-' + f + '-'))),
     Object.entries(perForm).map(([f, l]) => f + ':' + l.length).join(' '));
   await chip(p, 'format', 'c5'); await pick('base', 'vs-c5-krasnyij-krug-49mm'); await pick('print', 'sp-07');
   await chip(p, 'format', 's5'); await sleep(60);
   const nt = await p.evaluate(() => { const n = document.querySelector('#notice-base'); return { shown: !!n && !n.hidden, txt: n ? n.textContent : '' }; });
   const vt = await copyText();
-  ok('Смена формата: красный круг (нет в квадрате 50 мм) сброшен с подсказкой и не попал в заявку', nt.shown && /Красный/.test(nt.txt) && vt.includes('Цвет наклейки: подобрать при обсуждении') && vt.includes('Цвет печати: Светло-розовый'), nt.txt + ' / ' + vt.split('\n').filter(x => /Цвет/.test(x)).join(' / '));
+  ok('Смена формата: красный круг (нет в квадрате 50 мм) заменён на белый с подсказкой, в заявке — белый', nt.shown && /Красный/.test(nt.txt) && /Пока выбран «Белый»/.test(nt.txt) && vt.includes('Цвет наклейки: Белый') && !vt.includes('Цвет наклейки: Красный') && vt.includes('Цвет печати: Светло-розовый'), nt.txt + ' / ' + vt.split('\n').filter(x => /Цвет/.test(x)).join(' / '));
   await pick('base', 'vs-s5-belyij-kvadrat-50mm'); await run(p, '1000'); await sleep(60);
   const vt2 = await copyText();
   ok('Сводка наклеек: формат, цвет наклейки, цвет печати, тираж, цена', ['Формат: Квадрат 5 × 5 см', 'Цвет наклейки: Белый', 'Цвет печати: Светло-розовый', 'Тираж: 1 000 шт.', 'Стоимость продукции по прайсу: 9 000 ₽'].every(x => vt2.includes(x)), vt2.split('\n').join(' / '));
@@ -279,7 +279,12 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   await close(p);
   const body = await p.evaluate(() => document.body.innerText);
   ok('Нет ложных уведомлений об отправке и заметок разработчика', !/отправлен|оформлен[ао]|Контакты добавим|В прайсе не указан|Фото готовится|Обсудить заказ/i.test(body));
-  ok('Раздел «Контакты» скрыт, пока нет контактов', await p.$eval('#contacts', el => el.hidden));
+  await open(p, 'ribbon');
+  const wa = await p.evaluate(() => { const a = document.querySelector('#sendWa'); if (!a) return null; document.addEventListener('click', e => e.preventDefault(), { once: true }); a.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); return { label: a.textContent.trim(), href: decodeURIComponent(a.href), copy: !!document.querySelector('#copyBtn') }; });
+  ok('Экран товара: «Отправить в WhatsApp» открывает чат с готовым текстом заявки, копирование осталось', wa && wa.label.replace(/\s+/g, ' ') === 'Отправить в WhatsApp' && wa.href.startsWith('https://wa.me/79180536881?text=') && /Цвет ленты: /.test(wa.href) && wa.copy, JSON.stringify(wa).slice(0, 200));
+  await close(p);
+  const ct = await p.evaluate(() => ({ shown: !document.querySelector('#contacts').hidden, nav: !document.querySelector('[data-contacts-only]').hidden, links: [...document.querySelectorAll('#contactLinks a')].map(a => a.getAttribute('href')), txt: document.querySelector('#contactLinks').textContent.replace(/\s+/g, ' ') }));
+  ok('Контакты: телефон (WhatsApp и MAX), WhatsApp, Telegram, почта', ct.shown && ct.nav && ['tel:+79180536881', 'https://wa.me/79180536881', 'https://t.me/vashibirki193', 'mailto:veronikanizametdinova71@mail.ru'].every(h => ct.links.includes(h)) && /WhatsApp и MAX/.test(ct.txt), JSON.stringify(ct));
   ok('390: нет ошибок JS', p._errors.length === 0, p._errors.join(' | '));
   await p.close();
 
@@ -290,7 +295,7 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
     const cards = ['ribbon','silicone','vinyl','phone','tape','choco','hero'].map(k => P[k]);
     return { keys: keys.join(), uniq: new Set(srcs).size === srcs.length, notInCards: srcs.every(s => !cards.includes(s)), figs: document.querySelectorAll('#rail figure').length,
       caps: [...document.querySelectorAll('#rail figcaption')].map(c => c.textContent.trim()) }; });
-  ok('Работы: 5 фото, без повторов между собой и с фото карточек', gw.keys === 'g_karamelka,g_mouse_flowers,g_cosmetolog,g_pion2,g_photograph' && gw.uniq && gw.notInCards && gw.figs === 5 && new Set(gw.caps).size === 5, JSON.stringify(gw));
+  ok('Работы: 15 фото, без повторов между собой и с фото карточек, без фото силиконовой ленты из карточки', gw.figs === 15 && gw.uniq && gw.notInCards && new Set(gw.caps).size === 15 && gw.keys.split(',').length === 15 && !/silicone/.test(gw.keys), JSON.stringify(gw).slice(0, 300));
   ok('Работы: фото не грузятся до прокрутки к разделу', before === 0, String(before));
   await g.evaluate(() => document.querySelector('#works').scrollIntoView()); await sleep(800);
   const ws = await g.evaluate(() => { const rail = document.querySelector('#rail'); return { multi: rail.classList.contains('is-multi'), nav: !document.querySelector('#railNav').hidden, sw: document.documentElement.scrollWidth,
@@ -298,7 +303,7 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   ok('Работы: режим листания, первое фото загружено, страница не шире экрана', ws.multi && ws.nav && ws.first && ws.sw <= 390, JSON.stringify(ws));
   await g.click('[data-work="0"]'); await sleep(250);
   const lb1 = await g.evaluate(() => ({ open: !document.querySelector('#lightbox').hidden, count: document.querySelector('#lbCount').textContent, focus: document.activeElement.id }));
-  ok('Фото открывается крупнее, счётчик 1 из 5', lb1.open && lb1.count === '1 из 5', JSON.stringify(lb1));
+  ok('Фото открывается крупнее, счётчик 1 из 15', lb1.open && lb1.count === '1 из 15', JSON.stringify(lb1));
   await g.keyboard.press('Escape'); await sleep(150);
   ok('Escape закрывает просмотр и возвращает фокус на фото', (await g.$eval('#lightbox', e => e.hidden)) && (await g.evaluate(() => document.activeElement.dataset.work)) === '0');
   await g.evaluate(() => document.querySelector('#works').scrollIntoView()); await sleep(200);

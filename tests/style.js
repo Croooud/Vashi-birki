@@ -51,11 +51,11 @@ for (const w of [360,390,430,1280]) {
   await p.click('#pMore summary'); await p.click('[data-layout="need"]'); await p.click('#priceToggle'); await sleep(120);
   s=await scan('#product');
   ok(`${w}: в экране товара нет текста мельче 13px`, s.small.length===0, s.small.join(' | '));
-  ok(`${w}: в экране товара Prata только в названии товара`, s.synth.length===0 && s.display.every(x=>x==='pTitle'), s.display.join(', '));
+  ok(`${w}: в экране товара Prata только в названии товара и в примерке`, s.synth.length===0 && s.display.every(x=>x==='pTitle'||x==='tryText2'), s.display.join(', '));
   ok(`${w}: старые цвета в экране товара не используются`, s.oldColors.length===0, s.oldColors.join(' | '));
-  const st=await p.evaluate(()=>({chip:getComputedStyle(document.querySelector('[data-dim][aria-pressed="true"]')).backgroundColor, chipOff:getComputedStyle(document.querySelector('[data-dim][aria-pressed="false"]')).backgroundColor, copy:getComputedStyle(document.querySelector('#copyBtn')).backgroundColor, tot:(c=>({fontWeight:c.fontWeight,fontFamily:c.fontFamily}))(getComputedStyle(document.querySelector('#sumTotal'))), active:getComputedStyle(document.querySelector('[data-pp][aria-current="true"]')).color}));
+  const st=await p.evaluate(()=>({chip:getComputedStyle(document.querySelector('[data-dim][aria-pressed="true"]')).backgroundColor, chipOff:getComputedStyle(document.querySelector('[data-dim][aria-pressed="false"]')).backgroundColor, copy:getComputedStyle(document.querySelector('#pActions > :first-child')).backgroundColor, tot:(c=>({fontWeight:c.fontWeight,fontFamily:c.fontFamily}))(getComputedStyle(document.querySelector('#sumTotal'))), active:getComputedStyle(document.querySelector('[data-pp][aria-current="true"]')).color}));
   ok(`${w}: выбранная ширина и активная строка прайса — бордовые, невыбранные — светлые`, st.chip==='rgb(112, 45, 62)' && st.chipOff==='rgb(255, 252, 247)' && st.active==='rgb(112, 45, 62)' , JSON.stringify({chip:st.chip,off:st.chipOff,active:st.active}));
-  ok(`${w}: кнопка «Скопировать заявку» бордовая, итог — Manrope 600`, st.copy==='rgb(112, 45, 62)' && st.tot.fontWeight==='600' && st.tot.fontFamily.startsWith('Manrope'), st.copy+' '+st.tot.fontWeight+' '+st.tot.fontFamily.split(',')[0]);
+  ok(`${w}: главная кнопка заявки бордовая, итог — Manrope 600`, st.copy==='rgb(112, 45, 62)' && st.tot.fontWeight==='600' && st.tot.fontFamily.startsWith('Manrope'), st.copy+' '+st.tot.fontWeight+' '+st.tot.fontFamily.split(',')[0]);
   // фокус в поле
   await p.focus('#comment'); await sleep(350); const fc=await p.evaluate(()=>getComputedStyle(document.querySelector('#comment')).borderTopColor);
   ok(`${w}: поле в фокусе выделено бордовым`, fc==='rgb(112, 45, 62)', fc);
