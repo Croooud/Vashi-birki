@@ -21,10 +21,13 @@ const out = []; const ok = (n, c, i = '') => out.push([c ? 'OK  ' : 'FAIL', n, i
       return { vis: !pk.hidden, full: Math.round(pr.width), vw: innerWidth, hOver: grid.scrollWidth > grid.clientWidth + 1 || document.querySelector('#pkBody').scrollWidth > document.querySelector('#pkBody').clientWidth + 1,
         clipped: names.filter(n => n.scrollWidth > n.clientWidth + 1).map(n => n.textContent), minName: Math.min(...names.map(n => parseFloat(getComputedStyle(n).fontSize))),
         tileW: Math.round(tiles[0].getBoundingClientRect().width), closeSz: Math.round(Math.min(close.width, close.height)), okIn: ok.bottom <= innerHeight + 1 && ok.top >= 0,
-        pageSW: document.documentElement.scrollWidth, focusIn: pk.contains(document.activeElement), n: tiles.length };
+        pageSW: document.documentElement.scrollWidth, focusIn: pk.contains(document.activeElement), n: tiles.length, ph: grid.querySelectorAll('.sh-ph').length, noImg: tiles.filter(t => !t.querySelector('img')).map(t => t.dataset.id) };
     });
     ok(`${w} ${prod}/${k}: окно открыто, без горизонтального скролла, подписи не обрезаны (≥13px)`, r.vis && !r.hOver && !r.clipped.length && r.minName >= 13 && r.pageSW <= w && !card.over && !card.clip, JSON.stringify(r));
     ok(`${w} ${prod}/${k}: крупные миниатюры, заметное закрытие (≥44px), «Готово» на экране, фокус внутри`, r.tileW >= 88 && r.closeSz >= 44 && r.okIn && r.focusIn, `tile ${r.tileW}, close ${r.closeSz}, ok ${r.okIn}, focus ${r.focusIn}`);
+    if (w === 390) { await sleep(600); const ld = await p.evaluate(() => { const im = [...document.querySelectorAll('#pkGrid img')]; let el = document.querySelector('#pkBody'); el.scrollTop = el.scrollHeight; return im.length; }); await sleep(900);
+      const loaded = await p.evaluate(() => [...document.querySelectorAll('#pkGrid img')].filter(i => !(i.complete && i.naturalWidth > 0)).map(i => i.closest('.pk-tile').dataset.id));
+      ok(`${w} ${prod}/${k}: у каждого варианта есть фото, все фото загружаются`, r.ph === 0 && !r.noImg.length && !loaded.length, `без фото: ${r.noImg.join(',')} не загрузились: ${loaded.join(',')}`); }
     await p.keyboard.press('Tab'); await p.keyboard.press('Tab');
     ok(`${w} ${prod}/${k}: Tab не уходит из окна цвета`, await p.evaluate(() => document.querySelector('#picker').contains(document.activeElement)));
     if (w === 390 && k === 'base' && prod === 'ribbon') { await p.screenshot({ path: path.join(__dirname, 'shots', 'pk_390.png') }); }
