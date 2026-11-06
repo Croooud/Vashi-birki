@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /index.dev.html
+Disallow: /tests/
+Disallow: /tools/
+
+Sitemap: https://croooud.github.io/Vashi-birki/sitemap.xml

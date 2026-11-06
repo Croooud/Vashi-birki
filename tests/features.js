@@ -1,3 +1,4 @@
+// Примерка, корзина, общая заявка, FAQ, контакты, «Как заказать»
 // Запуск: npm i puppeteer && node tests/features.js  (сайт: ../index.html или SITE_URL; Chrome: CHROME_PATH, по умолчанию браузер puppeteer)
 require('fs').mkdirSync(require('path').join(__dirname, 'shots'), { recursive: true });
 const puppeteer = require('puppeteer'); const path = require('path');
@@ -43,7 +44,7 @@ const URL = (process.env.SITE_URL || 'file://' + path.resolve(__dirname, '..', '
     await p.evaluate(() => document.querySelector('.pk-tile[data-id="sc-korolevskij-sinij"]').click()); await p.evaluate(() => document.querySelector('#pkOk').click()); await sleep(250);
     await p.evaluate(() => document.querySelector('[data-pick="print"]').click()); await sleep(300);
     await p.evaluate(() => document.querySelector('.pk-tile[data-id="rp-02"]').click()); await p.evaluate(() => document.querySelector('#pkOk').click()); await sleep(250);
-    const d1 = await p.evaluate(() => ({ badges: document.querySelectorAll('#pColors .cf-badge').length, strip: getComputedStyle(document.querySelector('#tryStrip')).backgroundColor, color: getComputedStyle(document.querySelector('#tryText2')).color, metal: document.querySelector('#tryText2').classList.contains('is-metal'), txt: document.querySelector('#tryText2').textContent, note: document.querySelector('#tryNote').textContent, hex: window.SHADE_HEX['sc-korolevskij-sinij'] }));
+    const d1 = await p.evaluate(() => ({ badges: document.querySelectorAll('#pColors .cf-badge').length, strip: getComputedStyle(document.querySelector('#tryStrip')).backgroundColor, color: getComputedStyle(document.querySelector('#tryText2')).color, metal: document.querySelector('#tryText2').classList.contains('is-metal'), txt: document.querySelector('#tryText2').textContent, note: document.querySelector('#tryNote').textContent.replace(/[\u00a0\u202f]/g, ' '), hex: window.SHADE_HEX['sc-korolevskij-sinij'] }));
     const hexRgb = h => 'rgb(' + [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)).join(', ') + ')';
     ok(`${w}: примерка: текст, «Королевский Синий» и жёлтая печать; метки «по умолчанию» сняты`, d1.badges === 0 && d1.strip === hexRgb(d1.hex) && !d1.metal && /KOSHEK/.test(d1.txt) && /королевский синий, печать — жёлтый/.test(d1.note), JSON.stringify(d1));
     // заявка: строка про логотип и текст примерки
@@ -54,7 +55,7 @@ const URL = (process.env.SITE_URL || 'file://' + path.resolve(__dirname, '..', '
     const c1 = await p.evaluate(() => ({ sheet: document.querySelector('#product').hidden, n: document.querySelector('#cartCount').textContent, toast: document.querySelector('#ptoast').textContent, mbarCart: !document.querySelector('#mbarCart').hidden, pill: getComputedStyle(document.querySelector('#cartPill')).display }));
     ok(`${w}: «Добавить в заявку» закрывает экран товара, счётчик 1, уведомление`, c1.sheet && c1.n === '1' && /Добавлено в заявку · 1 товар/.test(c1.toast) && (w < 768 ? c1.mbarCart : c1.pill !== 'none'), JSON.stringify(c1));
     await p.evaluate(() => document.querySelector('[data-open="vinyl"]').click()); await sleep(500);
-    const box = await p.evaluate(() => ({ t: document.querySelector('#cartBoxText').textContent, open: !document.querySelector('#openCartFromSheet').hidden, tryon: document.querySelector('#tryon').hidden }));
+    const box = await p.evaluate(() => ({ t: document.querySelector('#cartBoxText').textContent.replace(/[\u00a0\u202f]/g, ' '), open: !document.querySelector('#openCartFromSheet').hidden, tryon: document.querySelector('#tryon').hidden }));
     ok(`${w}: во втором товаре видно, что в заявке уже 1 товар; у наклеек нет примерки`, /уже 1 товар/.test(box.t) && box.open && box.tryon, JSON.stringify(box));
     await p.evaluate(() => document.querySelector('#addToCart').click()); await sleep(500);
     await p.reload(); await sleep(700);
@@ -78,7 +79,7 @@ const URL = (process.env.SITE_URL || 'file://' + path.resolve(__dirname, '..', '
     ok(`${w}: «Очистить» — заявка пуста, кнопки отправки скрыты`, c3.empty && c3.actions && c3.n === '0', JSON.stringify(c3));
     await p.keyboard.press('Escape'); await sleep(200);
     ok(`${w}: нет горизонтального скролла и ошибок JS`, (await p.evaluate(() => document.documentElement.scrollWidth)) <= w && errs.length === 0, errs.join(' | '));
-    if (w === 390) { await p.evaluate(() => document.querySelector('#how').scrollIntoView()); await sleep(900); await p.screenshot({ path: require('path').join(__dirname, 'shots', 'v15_how_390.png') }); }
+    if (w === 390) { await p.evaluate(() => document.querySelector('#how').scrollIntoView()); await sleep(900); await p.screenshot({ path: path.join(__dirname, 'shots', 'v15_how_390.png') }); }
     await p.close();
   }
   // уменьшение движения: ленты стоят, блоки видны сразу

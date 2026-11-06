@@ -1,3 +1,4 @@
+// Основная проверка: вёрстка 320–1440 px, каталог, калькулятор, цены, заявка
 // Запуск: npm i puppeteer && node tests/check.js  (сайт: ../index.html или SITE_URL; Chrome: CHROME_PATH, по умолчанию браузер puppeteer)
 require('fs').mkdirSync(require('path').join(__dirname, 'shots'), { recursive: true });
 const puppeteer = require('puppeteer');
@@ -163,7 +164,7 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   ok('В ленте нет лишних материалов (тканый край, президентский и др.)', (await p.$$eval('[data-dim="material"]', b => b.map(x => x.textContent.trim()))).join('|') === 'Классический глянцевый сатин|Матовый двухсторонний сатин');
   // ---------- выбор цвета через окно ----------
   const pkOpen = async k => { await p.evaluate(k => document.querySelector(`[data-pick="${k}"]`).scrollIntoView({ block: 'center' }), k); await p.click(`[data-pick="${k}"]`); await sleep(260); };
-  const pkList = async k => { await pkOpen(k); const l = await p.$$eval('#pkGrid .pk-tile', b => b.map(x => ({ id: x.dataset.id, name: x.querySelector('.pk-name').textContent }))); await p.click('#pkClose'); await sleep(120); return l; };
+  const pkList = async k => { await pkOpen(k); const l = await p.$$eval('#pkGrid .pk-tile', b => b.map(x => ({ id: x.dataset.id, name: x.querySelector('.pk-name').textContent.replace(/[\u00a0\u202f]/g, ' ') }))); await p.click('#pkClose'); await sleep(120); return l; };
   const pick = async (k, id) => { await pkOpen(k); await p.evaluate(id => document.querySelector(`.pk-tile[data-id="${id}"]`).scrollIntoView({ block: 'center' }), id); await p.click(`.pk-tile[data-id="${id}"]`); await sleep(60); await p.click('#pkOk'); await sleep(200); };
   const fieldVal = k => p.$eval(`[data-sel="${k}"]`, el => el.textContent.trim());
   const copyText = async () => { await p.evaluate(() => { window.__c = null; navigator.clipboard.writeText = t => { window.__c = t; return Promise.resolve(); }; }); await p.click('#copyBtn'); await sleep(120); return (await p.evaluate(() => window.__c)) || ''; };
@@ -187,10 +188,10 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   await pkOpen('base'); await p.keyboard.press('Escape'); await sleep(150);
   ok('Escape закрывает только окно цвета, экран товара остаётся', (await p.$eval('#picker', e => e.hidden)) && !(await p.$eval('#product', e => e.hidden)));
   await pkOpen('base'); await p.type('#pkSearch', 'лагуна'); await sleep(80);
-  const vis = await p.$$eval('#pkGrid .pk-tile:not([hidden]) .pk-name', b => b.map(x => x.textContent)); await p.click('#pkClose'); await sleep(120);
+  const vis = await p.$$eval('#pkGrid .pk-tile:not([hidden]) .pk-name', b => b.map(x => x.textContent.replace(/[\u00a0\u202f]/g, ' '))); await p.click('#pkClose'); await sleep(120);
   ok('Поиск по названию находит оттенок', vis.join() === 'Голубая Лагуна', vis.join());
   await chip(p, 'width', '20'); await sleep(80);
-  const nt1 = await p.evaluate(() => { const n = document.querySelector('#notice-base'); return { shown: !!n && !n.hidden, txt: n ? n.textContent : '', b: document.querySelector('[data-sel="base"]').textContent, pr: document.querySelector('[data-sel="print"]').textContent }; });
+  const nt1 = await p.evaluate(() => { const n = document.querySelector('#notice-base'); return { shown: !!n && !n.hidden, txt: n ? n.textContent.replace(/[\u00a0\u202f]/g, ' ') : '', b: document.querySelector('[data-sel="base"]').textContent, pr: document.querySelector('[data-sel="print"]').textContent }; });
   ok('Смена ширины: «Алый Кардинал» (нет в 20 мм) заменён на «Белый» с подсказкой, печать сохранена', nt1.shown && /Алый Кардинал/.test(nt1.txt) && /Пока выбран «Белый»/.test(nt1.txt) && nt1.b === 'Белый' && nt1.pr === 'Золото', JSON.stringify(nt1));
   await chip(p, 'material', 'matte');
   const cm = await pkList('base');
@@ -232,7 +233,7 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
     Object.entries(perForm).map(([f, l]) => f + ':' + l.length).join(' '));
   await chip(p, 'format', 'c5'); await pick('base', 'vs-c5-krasnyij-krug-49mm'); await pick('print', 'sp-07');
   await chip(p, 'format', 's5'); await sleep(60);
-  const nt = await p.evaluate(() => { const n = document.querySelector('#notice-base'); return { shown: !!n && !n.hidden, txt: n ? n.textContent : '' }; });
+  const nt = await p.evaluate(() => { const n = document.querySelector('#notice-base'); return { shown: !!n && !n.hidden, txt: n ? n.textContent.replace(/[\u00a0\u202f]/g, ' ') : '' }; });
   const vt = await copyText();
   ok('Смена формата: красный круг (нет в квадрате 50 мм) заменён на белый с подсказкой, в заявке — белый', nt.shown && /Красный/.test(nt.txt) && /Пока выбран «Белый»/.test(nt.txt) && vt.includes('Цвет наклейки: Белый') && !vt.includes('Цвет наклейки: Красный') && vt.includes('Цвет печати: Светло-розовый'), nt.txt + ' / ' + vt.split('\n').filter(x => /Цвет/.test(x)).join(' / '));
   await pick('base', 'vs-s5-belyij-kvadrat-50mm'); await run(p, '1000'); await sleep(60);
