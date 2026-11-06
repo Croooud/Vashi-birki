@@ -226,8 +226,8 @@ async function run(p, v) { await p.select('#runSelect', v); await sleep(60); }
   const perForm = {};
   for (const f of ['c5', 's5', 'r46', 'r28']) { await chip(p, 'format', f); perForm[f] = (await pkList('base')); }
   await chip(p, 'format', 'big'); const bigF = await p.evaluate(() => ({ btn: !!document.querySelector('[data-pick="base"]'), txt: document.querySelector('#pColors').textContent }));
-  ok('Наклейки: цвета основы по форме и размеру поставщика (круг 5 см — 16 поставщика + 6 клиентки, квадрат 50 мм — 4, прямоугольники — белый и прозрачный, 75 × 120 — уточнить)',
-    perForm.c5.length === 22 && ['Фисташка', 'Бордо', 'Шоколад', 'Молочный', 'Лаванда', 'Нежно-розовый'].every(n => perForm.c5.some(x => x.name === n)) && perForm.s5.map(x => x.name).join('|') === 'Белый|Прозрачный|Чёрный|Шоколадный' && perForm.r46.map(x => x.name).join('|') === 'Белый|Прозрачный' && perForm.r28.map(x => x.name).join('|') === 'Белый|Прозрачный' && !bigF.btn && /уточним/.test(bigF.txt)
+  ok('Наклейки: цвета основы по форме и размеру поставщика (круг 5 см — 16 поставщика + 6 клиентки, квадрат 50 мм — 4, 4 × 6 — белый и прозрачный, 2 × 8 — 7 цветов, 75 × 120 — уточнить)',
+    perForm.c5.length === 22 && ['Фисташка', 'Бордо', 'Шоколад', 'Молочный', 'Лаванда', 'Нежно-розовый'].every(n => perForm.c5.some(x => x.name === n)) && perForm.s5.map(x => x.name).join('|') === 'Белый|Прозрачный|Чёрный|Шоколадный' && perForm.r46.map(x => x.name).join('|') === 'Белый|Прозрачный' && perForm.r28.map(x => x.name).join('|') === 'Белый|Прозрачный|Чёрный|Клубника со сливками|Орхидея|Полынь|Лаванда' && !bigF.btn && /уточним/.test(bigF.txt)
     && ['c5', 's5', 'r46', 'r28'].every(f => perForm[f].every(x => x.id.startsWith('vs-' + f + '-') || x.id.startsWith('vk-' + f + '-'))),
     Object.entries(perForm).map(([f, l]) => f + ':' + l.length).join(' '));
   await chip(p, 'format', 'c5'); await pick('base', 'vs-c5-krasnyij-krug-49mm'); await pick('print', 'sp-07');
